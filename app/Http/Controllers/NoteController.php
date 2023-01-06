@@ -85,11 +85,47 @@ class NoteController extends Controller
      */
     public function destroy(Note $note)
     {
-
         
         return $this->isNotAuthorized($note) ? $this->isNotAuthorized($note) : $note->delete();
     }
 
+    /**
+     * Remove multiple notes from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyMultiple(Request $request)
+    {
+        
+             $notesData = $request->all();
+
+             $notes = Note::whereIn('id',$notesData['ids'])->get();
+
+             if($notes->isEmpty()){
+                return response()->json([
+                    'message'=>'Notes are not found'
+                ],404);
+             }else{
+                foreach($notes as $note){
+                    if (Auth::user()->id !== $note->user_id) {
+                        return response()->json([
+                            'message'=>'You are not authorized to delete these notes'
+                        ]);
+                    }else{
+                        $note->delete();
+                        return response()->json([
+                            'message'=>'Notes deleted successfully'
+                        ]);
+                    }
+                }
+             }
+
+             $notesData = $request->all();
+             $notes = Note::whereIn('id',$notesData['ids'])->get();    
+            
+    }
+    
     /**
      * Search for a title.
      *

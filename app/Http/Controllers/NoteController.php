@@ -108,21 +108,19 @@ class NoteController extends Controller
                 ],404);
              }else{
                 foreach($notes as $note){
-                    if (Auth::user()->id !== $note->user_id) {
+                    if(Auth::user()->id !== $note->user_id){
                         return response()->json([
-                            'message'=>'You are not authorized to delete these notes'
-                        ]);
-                    }else{
-                        $note->delete();
-                        return response()->json([
-                            'message'=>'Notes deleted successfully'
-                        ]);
+                            'message'=>'You are not authorized to delete this note'
+                        ],403);
                     }
                 }
+                $notes->each->delete();
+                return response()->json([
+                    'message'=>'Notes are deleted successfully'
+                ],200);
              }
 
-             $notesData = $request->all();
-             $notes = Note::whereIn('id',$notesData['ids'])->get();    
+             
             
     }
     

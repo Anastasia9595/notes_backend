@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Note;
 use App\Http\Requests\StoreNoteRequest;
 
+
 class NoteController extends Controller
 {
     
@@ -42,6 +43,7 @@ class NoteController extends Controller
 
        return new NotesResource($note);
     }
+
 
     /**
      * Display the specified resource.
